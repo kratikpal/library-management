@@ -41,7 +41,7 @@ public class UserService {
             }
             final UserCredentials userCredentials = userCredentialsService.findByUser(user);
             if (userCredentials.getPassword().equals(loginUserDto.getPassword())) {
-                return new GenericResponse<>(HttpConstants.SUCCESS, "User logged in", null);
+                return new GenericResponse<>(HttpConstants.SUCCESS, "User logged in", user);
             }
             return new GenericResponse<>(HttpConstants.Failure, "Invalid credentials", null);
         } catch (Exception e) {

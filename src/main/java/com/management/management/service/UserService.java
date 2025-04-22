@@ -25,7 +25,7 @@ public class UserService {
             if (userExists) {
                 return new GenericResponse<>(HttpConstants.Failure, "User already exists", null);
             }
-            final User user = new User(registerUserDto.getEmail(), registerUserDto.getName());
+            final User user = userRepository.save(new User(registerUserDto.getName(), registerUserDto.getEmail()));
             userCredentialsService.registerUserCredentials(user, registerUserDto.getPassword());
             return new GenericResponse<>(HttpConstants.SUCCESS, "User created", null);
         } catch (Exception e) {
