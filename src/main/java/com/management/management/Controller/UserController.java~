@@ -21,6 +21,9 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private JwtService jwtService;
+
     @GetMapping
     public ResponseEntity<String>  hello(){
         return new ResponseEntity<>("User created", HttpStatus.OK);
@@ -44,7 +47,8 @@ public class UserController {
         try {
             GenericResponse<?> response = userService.loginUser(loginUserDto);
             if (response.getStatus().equals(HttpConstants.SUCCESS)) {
-                return new ResponseEntity<>(response, HttpStatus.OK);
+                String token = jwtService.generateToken(loginUserDto.getEmail());
+                return new ResponseEntity<>(token, HttpStatus.OK);
             }
             return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
