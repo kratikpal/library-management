@@ -47,7 +47,8 @@ public class UserService {
             final Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginUserDto.getEmail(), loginUserDto.getPassword()));
 
             if (authentication.isAuthenticated()){
-                final String token = jwtService.generateToken(loginUserDto.getEmail());
+                final User user = userRepository.findByEmail(loginUserDto.getEmail());
+                final String token = jwtService.generateToken(user);
                 return new GenericResponse<>(HttpConstants.SUCCESS, "User logged in", token);
             }else{
                 return new GenericResponse<>(HttpConstants.FAILURE, "User not logged in", null);
