@@ -3,4 +3,4 @@ spring.data.mongodb.host=localhost
 spring.data.mongodb.port=27017
 spring.data.mongodb.database=management
 spring.data.mongodb.auto-index-creation=true
-jwt.secret=e14cf4073d567a643daa72f479f7ff115228cefd1d5b1d3b6e96fac4712c8e986010d84364b80a5aac0738aee3696e4c55e3e0e30f50afc0aa5a6a46cf4e8269
+jwt.secret=4f1de3c09a8e6e7d7b9f6d1b2d5a8c7e0f3c6a9d2b5e8a7c0f3e6d9c2b5a8e1f4
