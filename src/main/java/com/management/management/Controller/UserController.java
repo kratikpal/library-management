@@ -3,15 +3,11 @@ package com.management.management.Controller;
 import com.management.management.Constants.HttpConstants;
 import com.management.management.dtos.LoginUserDto;
 import com.management.management.dtos.RegisterUserDto;
-import com.management.management.service.JwtService;
 import com.management.management.service.UserService;
 import com.management.management.utility.GenericResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -22,8 +18,8 @@ public class UserController {
     private UserService userService;
 
     @GetMapping
-    public ResponseEntity<String>  hello(){
-        return new ResponseEntity<>("User created", HttpStatus.OK);
+    public ResponseEntity<String> hello() {
+        return new ResponseEntity<>("User endpoint working", HttpStatus.OK);
     }
 
     @PostMapping("/register")
@@ -31,11 +27,15 @@ public class UserController {
         try {
             GenericResponse<?> response = userService.registerUser(registerUserDto);
             if (response.getStatus().equals(HttpConstants.SUCCESS)) {
-                return new ResponseEntity<>(response, HttpStatus.OK);
+                return new ResponseEntity<>(response, HttpStatus.CREATED);
             }
             return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(new GenericResponse<>(
+                    HttpConstants.FAILURE,
+                    e.getMessage(),
+                    null),
+                    HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -46,9 +46,13 @@ public class UserController {
             if (response.getStatus().equals(HttpConstants.SUCCESS)) {
                 return new ResponseEntity<>(response, HttpStatus.OK);
             }
-            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            return new ResponseEntity<>(new GenericResponse<>(
+                    HttpConstants.FAILURE,
+                    "Authentication failed: " + e.getMessage(),
+                    null),
+                    HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

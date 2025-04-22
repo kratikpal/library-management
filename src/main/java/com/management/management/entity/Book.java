@@ -8,8 +8,6 @@ import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
 public class Book {
     @Id
     private ObjectId id;

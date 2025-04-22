@@ -1,19 +1,25 @@
 package com.management.management.service;
 
 import com.management.management.Constants.HttpConstants;
+import com.management.management.dtos.LoginResponseDto;
 import com.management.management.dtos.LoginUserDto;
 import com.management.management.dtos.RegisterUserDto;
 import com.management.management.entity.User;
 import com.management.management.repository.UserRepository;
 import com.management.management.utility.GenericResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-@Component
+@Service
 public class UserService {
+    private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 
     @Autowired
     private UserRepository userRepository;
@@ -22,39 +28,62 @@ public class UserService {
     private UserCredentialsService userCredentialsService;
 
     @Autowired
-    AuthenticationManager authenticationManager;
+    private AuthenticationManager authenticationManager;
 
     @Autowired
     private JwtService jwtService;
 
+    @Transactional
     public GenericResponse<?> registerUser(RegisterUserDto registerUserDto) {
         try {
-            final boolean userExists = userRepository.findByEmail(registerUserDto.getEmail()) != null;
-            if (userExists) {
-                return new GenericResponse<>(HttpConstants.FAILURE, "User already exists", null);
+            if (registerUserDto.getEmail() == null || registerUserDto.getEmail().trim().isEmpty() ||
+                    registerUserDto.getPassword() == null || registerUserDto.getPassword().trim().isEmpty()) {
+                return new GenericResponse<>(HttpConstants.FAILURE, "Email and password are required", null);
             }
-            final User user = userRepository.save(new User(registerUserDto.getEmail(), registerUserDto.getName()));
+
+            User existingUser = userRepository.findByEmail(registerUserDto.getEmail());
+            if (existingUser != null) {
+                return new GenericResponse<>(HttpConstants.FAILURE, "User with this email already exists", null);
+            }
+
+            User user = new User(registerUserDto.getEmail(), registerUserDto.getName());
+            user = userRepository.save(user);
             userCredentialsService.registerUserCredentials(user, registerUserDto.getPassword());
-            return new GenericResponse<>(HttpConstants.SUCCESS, "User created", null);
+            return new GenericResponse<>(HttpConstants.SUCCESS, "User created successfully", null);
         } catch (Exception e) {
-            System.out.println(e);
-            throw new RuntimeException(e);
+            logger.error("Error registering user: {}", e.getMessage(), e);
+            return new GenericResponse<>(HttpConstants.FAILURE, "Error during registration: " + e.getMessage(), null);
         }
     }
 
-    public GenericResponse<?> loginUser(LoginUserDto loginUserDto){
+    public GenericResponse<?> loginUser(LoginUserDto loginUserDto) {
         try {
-            final Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginUserDto.getEmail(), loginUserDto.getPassword()));
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(loginUserDto.getEmail(), loginUserDto.getPassword())
+            );
 
-            if (authentication.isAuthenticated()){
-                final User user = userRepository.findByEmail(loginUserDto.getEmail());
-                final String token = jwtService.generateToken(user);
-                return new GenericResponse<>(HttpConstants.SUCCESS, "User logged in", token);
-            }else{
-                return new GenericResponse<>(HttpConstants.FAILURE, "User not logged in", null);
+            if (authentication.isAuthenticated()) {
+                User user = userRepository.findByEmail(loginUserDto.getEmail());
+                if (user == null) {
+                    return new GenericResponse<>(HttpConstants.FAILURE, "User not found", null);
+                }
+
+                String token = jwtService.generateToken(user);
+                LoginResponseDto responseDto = new LoginResponseDto();
+                responseDto.setToken(token);
+                responseDto.setEmail(user.getEmail());
+                responseDto.setName(user.getName());
+                responseDto.setRoles(user.getRoles());
+                return new GenericResponse<>(HttpConstants.SUCCESS, "Login successful", responseDto);
+            } else {
+                return new GenericResponse<>(HttpConstants.FAILURE, "Invalid credentials", null);
             }
+        } catch (BadCredentialsException e) {
+            logger.warn("Bad credentials for user {}", loginUserDto.getEmail());
+            return new GenericResponse<>(HttpConstants.FAILURE, "Invalid email or password", null);
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            logger.error("Error during login: {}", e.getMessage(), e);
+            return new GenericResponse<>(HttpConstants.FAILURE, "Authentication failed: " + e.getMessage(), null);
         }
     }
 }
