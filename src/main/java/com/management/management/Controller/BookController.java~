@@ -28,7 +28,6 @@ public class BookController {
     }
 
     @GetMapping("{isbn}")
-    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> getBookByIsbn(@PathVariable String isbn) {
         GenericResponse<?> response = bookService.getBookByIsbn(isbn);
         if (response.getStatus().equals(HttpConstants.SUCCESS)) {

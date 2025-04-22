@@ -26,9 +26,6 @@ public class BookService {
     public GenericResponse<?> getBookByIsbn(String isbn) {
         try {
             Book book = bookRepository.findByIsbn(isbn);
-            if (book == null) {
-                return new GenericResponse<>(HttpConstants.FAILURE, "Book not found", null);
-            }
             return new GenericResponse<>(HttpConstants.SUCCESS, "Book found", book);
         } catch (Exception e) {
             throw new RuntimeException(e);

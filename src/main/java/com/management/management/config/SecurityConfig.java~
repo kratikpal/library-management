@@ -3,6 +3,7 @@ package com.management.management.config;
 import com.management.management.Constants.UserRolesConstants;
 import com.management.management.filters.JwtFilter;
 import com.management.management.service.UserDetailsServiceImpl;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -43,6 +44,17 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider())
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
+                .exceptionHandling(ex -> ex
+                        .authenticationEntryPoint((request, response, authException) -> {
+                            // Check if it's a 404 (resource not found)
+                            if (request.getAttribute("jakarta.servlet.error.status_code") != null &&
+                                    (Integer) request.getAttribute("jakarta.servlet.error.status_code") == 404) {
+                                response.sendError(HttpServletResponse.SC_NOT_FOUND);
+                            } else {
+                                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, authException.getMessage());
+                            }
+                        })
+                )
                 .build();
     }
 

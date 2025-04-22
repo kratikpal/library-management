@@ -24,7 +24,7 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> registerUser(@Valid @RequestBody RegisterUserDto registerUserDto) {
+    public ResponseEntity<?> registerUser(@RequestBody RegisterUserDto registerUserDto) {
         try {
             GenericResponse<?> response = userService.registerUser(registerUserDto);
             if (response.getStatus().equals(HttpConstants.SUCCESS)) {
