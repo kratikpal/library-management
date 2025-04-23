@@ -9,19 +9,19 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
-public class UserCredentialsService {
+public class UserCredentialsServiceImpl implements UserCredentialsService {
+    private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(12);
     @Autowired
     private UserCredentialsRepository userCredentialsRepository;
 
-    private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(12);
-
-
+    @Override
     public void registerUserCredentials(User user, String password) {
-//        password = passwordEncoder.encode(password);
+        password = passwordEncoder.encode(password);
         final UserCredentials userCredentials = new UserCredentials(user, password);
         userCredentialsRepository.save(userCredentials);
     }
 
+    @Override
     public UserCredentials findByUser(User user) {
         return userCredentialsRepository.findByUser(user);
     }

@@ -1,7 +1,6 @@
 package com.management.management.service;
 
 import com.management.management.entity.User;
-import com.management.management.models.UserPrincipal;
 import com.management.management.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -18,7 +17,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     private UserRepository userRepository;
 
     @Autowired
-    private UserCredentialsService userCredentialsService;
+    private UserCredentialsServiceImpl userCredentialsService;
 
 
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {

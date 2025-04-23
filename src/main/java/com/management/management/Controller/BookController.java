@@ -18,13 +18,13 @@ import org.springframework.web.bind.annotation.*;
 public class BookController {
 
     @Autowired
-    private BookService bookService;
+    private BookService bookServiceImpl;
 
     @PostMapping("/create")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> createBook(@Valid @RequestBody BookDto bookDto) {
         try {
-            GenericResponse<?> response = bookService.saveBook(bookDto);
+            GenericResponse<?> response = bookServiceImpl.saveBook(bookDto);
             if (response.getStatus().equals(HttpConstants.SUCCESS)) {
                 return new ResponseEntity<>(response, HttpStatus.CREATED);
             }
@@ -38,7 +38,7 @@ public class BookController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> getBookByIsbn(@Valid @RequestParam String isbn) {
         try {
-            GenericResponse<?> response = bookService.getBookByIsbn(isbn);
+            GenericResponse<?> response = bookServiceImpl.getBookByIsbn(isbn);
             if (response.getStatus().equals(HttpConstants.SUCCESS)) {
                 return new ResponseEntity<>(response, HttpStatus.OK);
             }
@@ -56,7 +56,7 @@ public class BookController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> allocateBook(@Valid @RequestBody BookAllocateDto bookAllocateDto) {
         try {
-            GenericResponse<?> response = bookService.allocateBook(bookAllocateDto);
+            GenericResponse<?> response = bookServiceImpl.allocateBook(bookAllocateDto);
             if (response.getStatus().equals(HttpConstants.SUCCESS)) {
                 return new ResponseEntity<>(response, HttpStatus.OK);
             }
@@ -70,7 +70,7 @@ public class BookController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> deallocateBook(@Valid @RequestBody BookAllocateDto bookAllocateDto) {
         try {
-            GenericResponse<?> response = bookService.deallocateBook(bookAllocateDto);
+            GenericResponse<?> response = bookServiceImpl.deallocateBook(bookAllocateDto);
             if (response.getStatus().equals(HttpConstants.SUCCESS)) {
                 return new ResponseEntity<>(response, HttpStatus.OK);
             }
@@ -84,7 +84,7 @@ public class BookController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> updateBookQuantity(@RequestParam String isbn, @RequestParam Integer quantity) {
         try {
-            GenericResponse<?> response = bookService.updateBookQuantity(isbn, quantity);
+            GenericResponse<?> response = bookServiceImpl.updateBookQuantity(isbn, quantity);
             if (response.getStatus().equals(HttpConstants.SUCCESS)) {
                 return new ResponseEntity<>(response, HttpStatus.OK);
             }
@@ -98,7 +98,7 @@ public class BookController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> deleteBook(@Valid @RequestParam String isbn) {
         try {
-            GenericResponse<?> response = bookService.deleteBook(isbn);
+            GenericResponse<?> response = bookServiceImpl.deleteBook(isbn);
             if (response.getStatus().equals(HttpConstants.SUCCESS)) {
                 return new ResponseEntity<>(response, HttpStatus.OK);
             }
