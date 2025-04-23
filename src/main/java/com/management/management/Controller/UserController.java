@@ -3,12 +3,14 @@ package com.management.management.Controller;
 import com.management.management.Constants.HttpConstants;
 import com.management.management.dtos.LoginUserDto;
 import com.management.management.dtos.RegisterUserDto;
+import com.management.management.dtos.SetRoleDto;
 import com.management.management.service.UserService;
 import com.management.management.utility.GenericResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
@@ -69,6 +71,24 @@ public class UserController {
             return new ResponseEntity<>(new GenericResponse<>(
                     HttpConstants.FAILURE,
                     "Authentication failed: " + e.getMessage(),
+                    null),
+                    HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PostMapping("/set-role")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<?> setRole(@Valid @RequestBody SetRoleDto setRoleDto) {
+        try {
+            GenericResponse<?> response = userService.setRole(setRoleDto);
+            if (response.getStatus().equals(HttpConstants.SUCCESS)) {
+                return new ResponseEntity<>(response, HttpStatus.OK);
+            }
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            return new ResponseEntity<>(new GenericResponse<>(
+                    HttpConstants.FAILURE,
+                    e.getMessage(),
                     null),
                     HttpStatus.INTERNAL_SERVER_ERROR);
         }

@@ -4,9 +4,11 @@ import com.management.management.Constants.HttpConstants;
 import com.management.management.dtos.LoginResponseDto;
 import com.management.management.dtos.LoginUserDto;
 import com.management.management.dtos.RegisterUserDto;
+import com.management.management.dtos.SetRoleDto;
 import com.management.management.entity.User;
 import com.management.management.repository.UserRepository;
 import com.management.management.utility.GenericResponse;
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -105,6 +107,23 @@ public class UserService {
                     e.getMessage(),
                     null
             );
+        }
+    }
+
+    public GenericResponse<?> setRole(@Valid SetRoleDto setRoleDto) {
+        try {
+            User user = userRepository.findByEmail(setRoleDto.getEmail());
+            if (user == null) {
+                return new GenericResponse<>(HttpConstants.FAILURE, "User not found", null);
+            }
+            if(user.getRoles().contains(setRoleDto.getRole())) {
+                return new GenericResponse<>(HttpConstants.FAILURE, "User already has this role", null);
+            }
+            user.getRoles().add(setRoleDto.getRole());
+            user = userRepository.save(user);
+            return new GenericResponse<>(HttpConstants.SUCCESS, "Role updated successfully", null);
+        } catch (Exception e) {
+            return new GenericResponse<>(HttpConstants.FAILURE, "Error setting role: " + e.getMessage(), null);
         }
     }
 }

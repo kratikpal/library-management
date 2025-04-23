@@ -11,9 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @RestController
 @RequestMapping("/book")
 public class BookController {
@@ -33,17 +30,8 @@ public class BookController {
 
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<?> getBooksByIsbn(@RequestParam String isbns) {
-        String[] isbnArray = isbns.split(",");
-        List<String> isbnList = new ArrayList<>();
-        for (String isbn : isbnArray) {
-            String trimmedIsbn = isbn.trim();
-            if (!trimmedIsbn.isEmpty()) {
-                isbnList.add(trimmedIsbn);
-            }
-        }
-
-        GenericResponse<?> response = bookService.getBooksByIsbnList(isbnList);
+    public ResponseEntity<?> getBookByIsbn(@RequestParam String isbn) {
+        GenericResponse<?> response = bookService.getBookByIsbn(isbn);
         if (response.getStatus().equals(HttpConstants.SUCCESS)) {
             return new ResponseEntity<>(response, HttpStatus.OK);
         }

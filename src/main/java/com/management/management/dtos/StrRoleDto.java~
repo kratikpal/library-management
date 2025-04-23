@@ -1,0 +1,4 @@
+package com.management.management.dtos;
+
+public class StrRoleDto {
+}

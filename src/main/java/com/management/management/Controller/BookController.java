@@ -21,60 +21,108 @@ public class BookController {
     @PostMapping("/create")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> createBook(@RequestBody BookDto bookDto) {
-        GenericResponse<?> response = bookService.saveBook(bookDto);
-        if (response.getStatus().equals(HttpConstants.SUCCESS)) {
-            return new ResponseEntity<>(response, HttpStatus.CREATED);
+        try{
+            GenericResponse<?> response = bookService.saveBook(bookDto);
+            if (response.getStatus().equals(HttpConstants.SUCCESS)) {
+                return new ResponseEntity<>(response, HttpStatus.CREATED);
+            }
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            return new ResponseEntity<>(new GenericResponse<>(
+                    HttpConstants.FAILURE,
+                    e.getMessage(),
+                    null),
+                    HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> getBookByIsbn(@RequestParam String isbn) {
-        GenericResponse<?> response = bookService.getBookByIsbn(isbn);
-        if (response.getStatus().equals(HttpConstants.SUCCESS)) {
-            return new ResponseEntity<>(response, HttpStatus.OK);
-        }
-        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+       try {
+           GenericResponse<?> response = bookService.getBookByIsbn(isbn);
+           if (response.getStatus().equals(HttpConstants.SUCCESS)) {
+               return new ResponseEntity<>(response, HttpStatus.OK);
+           }
+           return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+       } catch (Exception e) {
+           return new ResponseEntity<>(new GenericResponse<>(
+                   HttpConstants.FAILURE,
+                   e.getMessage(),
+                   null),
+                   HttpStatus.INTERNAL_SERVER_ERROR);
+       }
     }
 
     @PostMapping("/allocate")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> allocateBook(@RequestBody BookAllocateDto bookAllocateDto) {
-        GenericResponse<?> response = bookService.allocateBook(bookAllocateDto);
-        if (response.getStatus().equals(HttpConstants.SUCCESS)) {
-            return new ResponseEntity<>(response, HttpStatus.OK);
+        try {
+            GenericResponse<?> response = bookService.allocateBook(bookAllocateDto);
+            if (response.getStatus().equals(HttpConstants.SUCCESS)) {
+                return new ResponseEntity<>(response, HttpStatus.OK);
+            }
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            return new ResponseEntity<>(new GenericResponse<>(
+                    HttpConstants.FAILURE,
+                    e.getMessage(),
+                    null),
+                    HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
     @PostMapping("/deallocate")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> deallocateBook(@RequestBody BookAllocateDto bookAllocateDto) {
-        GenericResponse<?> response = bookService.deallocateBook(bookAllocateDto);
-        if (response.getStatus().equals(HttpConstants.SUCCESS)) {
-            return new ResponseEntity<>(response, HttpStatus.OK);
+        try{
+            GenericResponse<?> response = bookService.deallocateBook(bookAllocateDto);
+            if (response.getStatus().equals(HttpConstants.SUCCESS)) {
+                return new ResponseEntity<>(response, HttpStatus.OK);
+            }
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            return new ResponseEntity<>(new GenericResponse<>(
+                    HttpConstants.FAILURE,
+                    e.getMessage(),
+                    null),
+                    HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
     @PutMapping("/update-quantity")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> updateBookQuantity(@RequestParam String isbn, @RequestParam Integer quantity) {
-        GenericResponse<?> response = bookService.updateBookQuantity(isbn, quantity);
-        if (response.getStatus().equals(HttpConstants.SUCCESS)) {
-            return new ResponseEntity<>(response, HttpStatus.OK);
+        try {
+            GenericResponse<?> response = bookService.updateBookQuantity(isbn, quantity);
+            if (response.getStatus().equals(HttpConstants.SUCCESS)) {
+                return new ResponseEntity<>(response, HttpStatus.OK);
+            }
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            return new ResponseEntity<>(new GenericResponse<>(
+                    HttpConstants.FAILURE,
+                    e.getMessage(),
+                    null),
+                    HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
     @DeleteMapping
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> deleteBook(@RequestParam String isbn) {
-        GenericResponse<?> response = bookService.deleteBook(isbn);
-        if (response.getStatus().equals(HttpConstants.SUCCESS)) {
-            return new ResponseEntity<>(response, HttpStatus.OK);
+        try {
+            GenericResponse<?> response = bookService.deleteBook(isbn);
+            if (response.getStatus().equals(HttpConstants.SUCCESS)) {
+                return new ResponseEntity<>(response, HttpStatus.OK);
+            }
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            return new ResponseEntity<>(new GenericResponse<>(
+                    HttpConstants.FAILURE,
+                    e.getMessage(),
+                    null),
+                    HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 }
