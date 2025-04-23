@@ -9,8 +9,7 @@ import com.management.management.entity.User;
 import com.management.management.repository.UserRepository;
 import com.management.management.utility.GenericResponse;
 import jakarta.validation.Valid;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -20,8 +19,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Slf4j
 public class UserService {
-    private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 
     @Autowired
     private UserRepository userRepository;
@@ -48,7 +47,7 @@ public class UserService {
             userCredentialsService.registerUserCredentials(user, registerUserDto.getPassword());
             return new GenericResponse<>(HttpConstants.SUCCESS, "User created successfully", null);
         } catch (Exception e) {
-            logger.error("Error registering user: {}", e.getMessage(), e);
+            log.error("Error registering user: {}", e.getMessage(), e);
             return new GenericResponse<>(HttpConstants.FAILURE, "Error during registration: " + e.getMessage(), null);
         }
     }
@@ -76,10 +75,10 @@ public class UserService {
                 return new GenericResponse<>(HttpConstants.FAILURE, "Invalid credentials", null);
             }
         } catch (BadCredentialsException e) {
-            logger.warn("Bad credentials for user {}", loginUserDto.getEmail());
+            log.warn("Bad credentials for user {}", loginUserDto.getEmail());
             return new GenericResponse<>(HttpConstants.FAILURE, "Invalid email or password", null);
         } catch (Exception e) {
-            logger.error("Error during login: {}", e.getMessage(), e);
+            log.error("Error during login: {}", e.getMessage(), e);
             return new GenericResponse<>(HttpConstants.FAILURE, "Authentication failed: " + e.getMessage(), null);
         }
     }
@@ -116,7 +115,7 @@ public class UserService {
             if (user == null) {
                 return new GenericResponse<>(HttpConstants.FAILURE, "User not found", null);
             }
-            if(user.getRoles().contains(setRoleDto.getRole())) {
+            if (user.getRoles().contains(setRoleDto.getRole())) {
                 return new GenericResponse<>(HttpConstants.FAILURE, "User already has this role", null);
             }
             user.getRoles().add(setRoleDto.getRole());

@@ -22,7 +22,7 @@ public class BookService {
     @Autowired
     private UserRepository userRepository;
 
-    public GenericResponse<?> saveBook(BookDto bookDto) {
+    public GenericResponse<?> saveBook(BookDto bookDto){
         try {
             Book book = bookRepository.save(new Book(bookDto.getIsbn(), bookDto.getTitle(), bookDto.getAuthor(), bookDto.getQuantity()));
             return new GenericResponse<>(HttpConstants.SUCCESS, "Book saved", book);
@@ -51,7 +51,7 @@ public class BookService {
             if (book == null) {
                 return new GenericResponse<>(HttpConstants.FAILURE, "Book not found", null);
             }
-            if (book.getQuantity() <= 0) {
+            if(book.getQuantity() <= 0){
                 return new GenericResponse<>(HttpConstants.FAILURE, "Book is out of stock", null);
             }
             User user = userRepository.findByEmail(bookAllocateDto.getEmail());
