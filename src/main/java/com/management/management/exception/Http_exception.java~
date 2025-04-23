@@ -1,0 +1,12 @@
+package com.management.management.exception;
+
+import org.springframework.http.HttpStatus;
+
+public class Http_exception extends RuntimeException {
+    private final HttpStatus status;
+    public Http_exception(String message = "Internal Server Error") {
+        super(message);
+        this.status = HttpStatus.INTERNAL_SERVER_ERROR;
+    }
+    
+}

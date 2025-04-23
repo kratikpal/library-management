@@ -4,6 +4,7 @@ import com.management.management.Constants.HttpConstants;
 import com.management.management.dtos.LoginUserDto;
 import com.management.management.dtos.RegisterUserDto;
 import com.management.management.dtos.SetRoleDto;
+import com.management.management.exception.HttpException;
 import com.management.management.service.UserService;
 import com.management.management.utility.GenericResponse;
 import jakarta.validation.Valid;
@@ -34,11 +35,7 @@ public class UserController {
             }
             return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
         } catch (Exception e) {
-            return new ResponseEntity<>(new GenericResponse<>(
-                    HttpConstants.FAILURE,
-                    "Failed to retrieve user: " + e.getMessage(),
-                    null),
-                    HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new HttpException();
         }
     }
 
@@ -51,11 +48,7 @@ public class UserController {
             }
             return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
-            return new ResponseEntity<>(new GenericResponse<>(
-                    HttpConstants.FAILURE,
-                    e.getMessage(),
-                    null),
-                    HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new HttpException();
         }
     }
 
@@ -68,11 +61,7 @@ public class UserController {
             }
             return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
         } catch (Exception e) {
-            return new ResponseEntity<>(new GenericResponse<>(
-                    HttpConstants.FAILURE,
-                    "Authentication failed: " + e.getMessage(),
-                    null),
-                    HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new HttpException();
         }
     }
 
@@ -86,11 +75,7 @@ public class UserController {
             }
             return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
-            return new ResponseEntity<>(new GenericResponse<>(
-                    HttpConstants.FAILURE,
-                    e.getMessage(),
-                    null),
-                    HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new HttpException();
         }
     }
 }

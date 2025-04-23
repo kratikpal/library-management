@@ -3,6 +3,7 @@ package com.management.management.Controller;
 import com.management.management.Constants.HttpConstants;
 import com.management.management.dtos.BookAllocateDto;
 import com.management.management.dtos.BookDto;
+import com.management.management.exception.HttpException;
 import com.management.management.service.BookService;
 import com.management.management.utility.GenericResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,10 +22,24 @@ public class BookController {
     @PostMapping("/create")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> createBook(@RequestBody BookDto bookDto) {
-        try{
+        try {
             GenericResponse<?> response = bookService.saveBook(bookDto);
             if (response.getStatus().equals(HttpConstants.SUCCESS)) {
                 return new ResponseEntity<>(response, HttpStatus.CREATED);
+            }
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            throw new HttpException();
+        }
+    }
+
+    @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<?> getBookByIsbn(@RequestParam String isbn) {
+        try {
+            GenericResponse<?> response = bookService.getBookByIsbn(isbn);
+            if (response.getStatus().equals(HttpConstants.SUCCESS)) {
+                return new ResponseEntity<>(response, HttpStatus.OK);
             }
             return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
@@ -34,24 +49,6 @@ public class BookController {
                     null),
                     HttpStatus.INTERNAL_SERVER_ERROR);
         }
-    }
-
-    @GetMapping
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<?> getBookByIsbn(@RequestParam String isbn) {
-       try {
-           GenericResponse<?> response = bookService.getBookByIsbn(isbn);
-           if (response.getStatus().equals(HttpConstants.SUCCESS)) {
-               return new ResponseEntity<>(response, HttpStatus.OK);
-           }
-           return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-       } catch (Exception e) {
-           return new ResponseEntity<>(new GenericResponse<>(
-                   HttpConstants.FAILURE,
-                   e.getMessage(),
-                   null),
-                   HttpStatus.INTERNAL_SERVER_ERROR);
-       }
     }
 
     @PostMapping("/allocate")
@@ -64,29 +61,21 @@ public class BookController {
             }
             return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
-            return new ResponseEntity<>(new GenericResponse<>(
-                    HttpConstants.FAILURE,
-                    e.getMessage(),
-                    null),
-                    HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new HttpException();
         }
     }
 
     @PostMapping("/deallocate")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> deallocateBook(@RequestBody BookAllocateDto bookAllocateDto) {
-        try{
+        try {
             GenericResponse<?> response = bookService.deallocateBook(bookAllocateDto);
             if (response.getStatus().equals(HttpConstants.SUCCESS)) {
                 return new ResponseEntity<>(response, HttpStatus.OK);
             }
             return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
-            return new ResponseEntity<>(new GenericResponse<>(
-                    HttpConstants.FAILURE,
-                    e.getMessage(),
-                    null),
-                    HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new HttpException();
         }
     }
 
@@ -100,11 +89,7 @@ public class BookController {
             }
             return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
-            return new ResponseEntity<>(new GenericResponse<>(
-                    HttpConstants.FAILURE,
-                    e.getMessage(),
-                    null),
-                    HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new HttpException();
         }
     }
 
@@ -118,11 +103,7 @@ public class BookController {
             }
             return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
-            return new ResponseEntity<>(new GenericResponse<>(
-                    HttpConstants.FAILURE,
-                    e.getMessage(),
-                    null),
-                    HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new HttpException();
         }
     }
 }
