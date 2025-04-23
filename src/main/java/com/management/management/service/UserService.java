@@ -81,4 +81,30 @@ public class UserService {
             return new GenericResponse<>(HttpConstants.FAILURE, "Authentication failed: " + e.getMessage(), null);
         }
     }
+
+    public GenericResponse<?> getUserByEmail(String email) {
+        try {
+            User user = userRepository.findByEmail(email);
+
+            if (user == null) {
+                return new GenericResponse<>(
+                        HttpConstants.FAILURE,
+                        "User not found",
+                        null
+                );
+            }
+
+            return new GenericResponse<>(
+                    HttpConstants.SUCCESS,
+                    "User retrieved successfully",
+                    user
+            );
+        } catch (Exception e) {
+            return new GenericResponse<>(
+                    HttpConstants.FAILURE,
+                    e.getMessage(),
+                    null
+            );
+        }
+    }
 }
