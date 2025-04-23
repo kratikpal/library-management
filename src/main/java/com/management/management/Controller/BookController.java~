@@ -22,7 +22,7 @@ public class BookController {
 
     @PostMapping("/create")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<?> createBook(@Valid @RequestBody BookDto bookDto) {
+    public ResponseEntity<?> createBook(@RequestBody BookDto bookDto) {
         try {
             GenericResponse<?> response = bookService.saveBook(bookDto);
             if (response.getStatus().equals(HttpConstants.SUCCESS)) {
@@ -36,7 +36,7 @@ public class BookController {
 
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<?> getBookByIsbn(@Valid @RequestParam String isbn) {
+    public ResponseEntity<?> getBookByIsbn(@RequestParam String isbn) {
         try {
             GenericResponse<?> response = bookService.getBookByIsbn(isbn);
             if (response.getStatus().equals(HttpConstants.SUCCESS)) {
@@ -54,7 +54,7 @@ public class BookController {
 
     @PostMapping("/allocate")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<?> allocateBook(@Valid @RequestBody BookAllocateDto bookAllocateDto) {
+    public ResponseEntity<?> allocateBook(@RequestBody BookAllocateDto bookAllocateDto) {
         try {
             GenericResponse<?> response = bookService.allocateBook(bookAllocateDto);
             if (response.getStatus().equals(HttpConstants.SUCCESS)) {
@@ -68,7 +68,7 @@ public class BookController {
 
     @PostMapping("/deallocate")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<?> deallocateBook(@Valid @RequestBody BookAllocateDto bookAllocateDto) {
+    public ResponseEntity<?> deallocateBook(@RequestBody BookAllocateDto bookAllocateDto) {
         try {
             GenericResponse<?> response = bookService.deallocateBook(bookAllocateDto);
             if (response.getStatus().equals(HttpConstants.SUCCESS)) {

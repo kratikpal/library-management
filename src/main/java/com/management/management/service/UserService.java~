@@ -125,17 +125,4 @@ public class UserService {
             return new GenericResponse<>(HttpConstants.FAILURE, "Error setting role: " + e.getMessage(), null);
         }
     }
-
-    public GenericResponse<?> getCurrentUser(String email) {
-        try {
-            User user = userRepository.findByEmail(email);
-            if (user == null) {
-                return new GenericResponse<>(HttpConstants.FAILURE, "User not found", null);
-            }
-            user.getBooks().forEach(book -> book.setQuantity(1));
-            return new GenericResponse<>(HttpConstants.SUCCESS, "User retrieved successfully", user);
-        } catch (Exception e) {
-            return new GenericResponse<>(HttpConstants.FAILURE, "Error retrieving user: " + e.getMessage(), null);
-        }
-    }
 }

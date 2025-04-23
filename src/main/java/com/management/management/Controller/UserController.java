@@ -28,7 +28,7 @@ public class UserController {
         try {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             String email = authentication.getName();
-            GenericResponse<?> response = userService.getUserByEmail(email);
+            GenericResponse<?> response = userService.getCurrentUser(email);
 
             if (response.getStatus().equals(HttpConstants.SUCCESS)) {
                 return new ResponseEntity<>(response, HttpStatus.OK);
