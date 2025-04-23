@@ -1,6 +1,7 @@
 package com.management.management.Controller;
 
 import com.management.management.Constants.HttpConstants;
+import com.management.management.dtos.BookAllocateDto;
 import com.management.management.dtos.BookDto;
 import com.management.management.service.BookService;
 import com.management.management.utility.GenericResponse;
@@ -27,10 +28,50 @@ public class BookController {
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
-    @GetMapping("{isbn}")
+    @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<?> getBookByIsbn(@PathVariable String isbn) {
+    public ResponseEntity<?> getBookByIsbn(@RequestParam String isbn) {
         GenericResponse<?> response = bookService.getBookByIsbn(isbn);
+        if (response.getStatus().equals(HttpConstants.SUCCESS)) {
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+    @PostMapping("/allocate")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<?> allocateBook(@RequestBody BookAllocateDto bookAllocateDto) {
+        GenericResponse<?> response = bookService.allocateBook(bookAllocateDto);
+        if (response.getStatus().equals(HttpConstants.SUCCESS)) {
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+    @PostMapping("/deallocate")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<?> deallocateBook(@RequestBody BookAllocateDto bookAllocateDto) {
+        GenericResponse<?> response = bookService.deallocateBook(bookAllocateDto);
+        if (response.getStatus().equals(HttpConstants.SUCCESS)) {
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+    @PutMapping("/update-quantity")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<?> updateBookQuantity(@RequestParam String isbn, @RequestParam Integer quantity) {
+        GenericResponse<?> response = bookService.updateBookQuantity(isbn, quantity);
+        if (response.getStatus().equals(HttpConstants.SUCCESS)) {
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+    @DeleteMapping
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<?> deleteBook(@RequestParam String isbn) {
+        GenericResponse<?> response = bookService.deleteBook(isbn);
         if (response.getStatus().equals(HttpConstants.SUCCESS)) {
             return new ResponseEntity<>(response, HttpStatus.OK);
         }

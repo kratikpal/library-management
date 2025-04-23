@@ -36,11 +36,6 @@ public class UserService {
     @Transactional
     public GenericResponse<?> registerUser(RegisterUserDto registerUserDto) {
         try {
-            if (registerUserDto.getEmail() == null || registerUserDto.getEmail().trim().isEmpty() ||
-                    registerUserDto.getPassword() == null || registerUserDto.getPassword().trim().isEmpty()) {
-                return new GenericResponse<>(HttpConstants.FAILURE, "Email and password are required", null);
-            }
-
             User existingUser = userRepository.findByEmail(registerUserDto.getEmail());
             if (existingUser != null) {
                 return new GenericResponse<>(HttpConstants.FAILURE, "User with this email already exists", null);
