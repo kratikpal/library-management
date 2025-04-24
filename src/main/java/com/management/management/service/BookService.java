@@ -2,7 +2,7 @@ package com.management.management.service;
 
 import com.management.management.dtos.BookAllocateDto;
 import com.management.management.dtos.BookDto;
-import com.management.management.utility.GenericResponse;
+import com.management.management.response.GenericResponse;
 
 public interface BookService {
     GenericResponse<?> saveBook(BookDto bookDto);

@@ -47,11 +47,14 @@ public class JwtFilter extends OncePerRequestFilter {
                     }
                 }
             }
+            filterChain.doFilter(request, response);
         } catch (Exception e) {
             logger.error("Cannot set user authentication: ", e);
+            response.setContentType("application/json");
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.getWriter().write("{\"status\":\"" + HttpConstants.FAILURE +
+                    "\",\"message\":\"Authentication failed: Invalid token or credentials\",\"data\":null}");
         }
-
-        filterChain.doFilter(request, response);
     }
 
     private String getTokenFromRequest(HttpServletRequest request) {

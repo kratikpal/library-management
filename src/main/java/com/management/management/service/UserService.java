@@ -3,7 +3,7 @@ package com.management.management.service;
 import com.management.management.dtos.LoginUserDto;
 import com.management.management.dtos.RegisterUserDto;
 import com.management.management.dtos.SetRoleDto;
-import com.management.management.utility.GenericResponse;
+import com.management.management.response.GenericResponse;
 
 public interface UserService {
     GenericResponse<?> registerUser(RegisterUserDto registerUserDto);

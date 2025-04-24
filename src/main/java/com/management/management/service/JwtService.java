@@ -2,6 +2,7 @@ package com.management.management.service;
 
 import com.management.management.entity.User;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -64,13 +65,11 @@ public class JwtService {
         try {
             Jwts.parser().verifyWith((javax.crypto.SecretKey) getSigningKey()).build().parseSignedClaims(token);
             return true;
+        } catch (JwtException e) {
+            throw e;
         } catch (Exception e) {
             logger.error("Error while validating token", e);
         }
         return false;
-    }
-
-    private Date extractExpiration(String token) {
-        return extractClaim(token, Claims::getExpiration);
     }
 }
