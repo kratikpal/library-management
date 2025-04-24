@@ -2,7 +2,7 @@ package com.management.management.config;
 
 import com.management.management.Constants.UserRolesConstants;
 import com.management.management.filters.JwtFilter;
-import com.management.management.service.UserDetailsServiceImpl;
+import com.management.management.service.Impl.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

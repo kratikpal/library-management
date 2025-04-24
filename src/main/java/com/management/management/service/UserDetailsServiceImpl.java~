@@ -16,8 +16,12 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Autowired
     private UserRepository userRepository;
 
-    @Autowired
-    private UserCredentialsServiceImpl userCredentialsService;
+
+    private final UserCredentialsServiceImpl userCredentialsService;
+
+    public UserDetailsServiceImpl(UserCredentialsServiceImpl userCredentialsService) {
+        this.userCredentialsService = userCredentialsService;
+    }
 
 
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {

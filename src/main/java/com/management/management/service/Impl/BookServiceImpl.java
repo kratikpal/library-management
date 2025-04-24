@@ -1,4 +1,4 @@
-package com.management.management.service;
+package com.management.management.service.Impl;
 
 import com.management.management.Constants.HttpConstants;
 import com.management.management.dtos.BookAllocateDto;
@@ -7,6 +7,7 @@ import com.management.management.entity.Book;
 import com.management.management.entity.User;
 import com.management.management.repository.BookRepository;
 import com.management.management.repository.UserRepository;
+import com.management.management.service.BookService;
 import com.management.management.utility.GenericResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

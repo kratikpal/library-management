@@ -1,4 +1,4 @@
-package com.management.management.service;
+package com.management.management.service.Impl;
 
 import com.management.management.Constants.HttpConstants;
 import com.management.management.dtos.LoginResponseDto;
@@ -7,6 +7,8 @@ import com.management.management.dtos.RegisterUserDto;
 import com.management.management.dtos.SetRoleDto;
 import com.management.management.entity.User;
 import com.management.management.repository.UserRepository;
+import com.management.management.service.JwtService;
+import com.management.management.service.UserService;
 import com.management.management.utility.GenericResponse;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
