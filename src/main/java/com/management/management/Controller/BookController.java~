@@ -35,6 +35,7 @@ public class BookController {
     }
 
     @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> getBookByIsbn(@Valid @RequestParam String isbn) {
         try {
             GenericResponse<?> response = bookServiceImpl.getBookByIsbn(isbn);
