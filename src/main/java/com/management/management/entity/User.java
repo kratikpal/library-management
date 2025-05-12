@@ -2,7 +2,6 @@ package com.management.management.entity;
 
 import com.management.management.Constants.UserRolesConstants;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
