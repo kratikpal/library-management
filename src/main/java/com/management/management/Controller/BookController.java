@@ -7,7 +7,6 @@ import com.management.management.exception.HttpException;
 import com.management.management.response.GenericResponse;
 import com.management.management.service.BookService;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -17,8 +16,11 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/book")
 public class BookController {
 
-    @Autowired
-    private BookService bookServiceImpl;
+    private final BookService bookServiceImpl;
+
+    public BookController(BookService bookServiceImpl) {
+        this.bookServiceImpl = bookServiceImpl;
+    }
 
     @PostMapping("/create")
     @PreAuthorize("hasRole('ADMIN')")

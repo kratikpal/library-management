@@ -1,0 +1,13 @@
+package com.management.management.repository;
+
+import com.management.management.entity.AllocationDuration;
+import org.bson.types.ObjectId;
+import org.springframework.data.mongodb.repository.MongoRepository;
+
+import java.util.List;
+
+public interface AllocationDurationRepository extends MongoRepository<AllocationDuration, ObjectId> {
+    List<AllocationDuration> findAllByReturnedFalse();
+
+    AllocationDuration findByUserIdAndBookId(ObjectId userId, ObjectId bookId);
+}

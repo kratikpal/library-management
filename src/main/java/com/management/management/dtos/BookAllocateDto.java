@@ -14,4 +14,7 @@ public class BookAllocateDto {
 
     @NotNull(message = "Email is required")
     private String email;
+
+    @NotNull(message = "Duration is required")
+    private int allocationDuration;
 }

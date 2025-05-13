@@ -3,25 +3,32 @@ package com.management.management.service.Impl;
 import com.management.management.Constants.HttpConstants;
 import com.management.management.dtos.BookAllocateDto;
 import com.management.management.dtos.BookDto;
+import com.management.management.entity.AllocationDuration;
 import com.management.management.entity.Book;
 import com.management.management.entity.User;
+import com.management.management.repository.AllocationDurationRepository;
 import com.management.management.repository.BookRepository;
 import com.management.management.repository.UserRepository;
 import com.management.management.response.GenericResponse;
 import com.management.management.service.BookService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
 
 @Service
 @Slf4j
 public class BookServiceImpl implements BookService {
 
-    @Autowired
-    private BookRepository bookRepository;
+    private final BookRepository bookRepository;
+    private final UserRepository userRepository;
+    private final AllocationDurationRepository allocationDurationRepository;
 
-    @Autowired
-    private UserRepository userRepository;
+    public BookServiceImpl(BookRepository bookRepository, UserRepository userRepository, AllocationDurationRepository allocationDurationRepository) {
+        this.bookRepository = bookRepository;
+        this.userRepository = userRepository;
+        this.allocationDurationRepository = allocationDurationRepository;
+    }
 
     @Override
     public GenericResponse<?> saveBook(BookDto bookDto) {
@@ -69,6 +76,21 @@ public class BookServiceImpl implements BookService {
             bookRepository.save(book);
             user.getBooks().add(book);
             userRepository.save(user);
+            AllocationDuration byUserIdAndBookId = allocationDurationRepository.findByUserIdAndBookId(user.getId(), book.getId());
+            if (byUserIdAndBookId == null) {
+                AllocationDuration allocationDuration = new AllocationDuration(
+                        user.getId(),
+                        book.getId(),
+                        LocalDate.now(),
+                        LocalDate.now().plusDays(bookAllocateDto.getAllocationDuration())
+                );
+                allocationDurationRepository.save(allocationDuration);
+            } else {
+                byUserIdAndBookId.setReturned(false);
+                byUserIdAndBookId.setIssueDate(LocalDate.now());
+                byUserIdAndBookId.setDueDate(LocalDate.now().plusDays(bookAllocateDto.getAllocationDuration()));
+                allocationDurationRepository.save(byUserIdAndBookId);
+            }
             return new GenericResponse<>(HttpConstants.SUCCESS, "Book allocated", null);
         } catch (Exception e) {
             log.error("Error allocating book: {}", e.getMessage(), e);
@@ -98,6 +120,9 @@ public class BookServiceImpl implements BookService {
             bookRepository.save(book);
             user.getBooks().remove(bookToRemove);
             userRepository.save(user);
+            AllocationDuration byUserIdAndBookId = allocationDurationRepository.findByUserIdAndBookId(user.getId(), bookToRemove.getId());
+            byUserIdAndBookId.setReturned(true);
+            allocationDurationRepository.save(byUserIdAndBookId);
             return new GenericResponse<>(HttpConstants.SUCCESS, "Book deallocated", null);
         } catch (Exception e) {
             log.error("Error deallocating book: {}", e.getMessage(), e);
