@@ -10,6 +10,7 @@ import com.management.management.service.EmailService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -45,9 +46,9 @@ public class EmailServiceImpl implements EmailService {
     }
 
     @Override
+    @Scheduled(cron = EmailConstants.REMAINDER_TIME)
     public void sendRemainderEmail() {
         try {
-            log.info("Sending remainder email");
             allocationDurationRepository.findAllByReturnedFalse().forEach(allocationDuration -> {
                 LocalDate dueDate = allocationDuration.getDueDate();
                 if (LocalDate.now().plusDays(2).isAfter(dueDate)) {
@@ -65,12 +66,12 @@ public class EmailServiceImpl implements EmailService {
                             .replace("[BOOK_NAME]", book.getTitle())
                             .replace("[ISBN]", book.getIsbn())
                             .replace("[RETURN_DATE]", allocationDuration.getDueDate().toString());
-                    log.info("Sending remainder email to {}", user.getEmail());
                     sendEmail(user.getEmail(), EmailConstants.REMAINDER_MAIL_SUBJECT, message);
+                    allocationDuration.setNotified(true);
+                    allocationDurationRepository.save(allocationDuration);
                 }
-
             });
-            log.info("Remainder email sent to");
+            log.info("Remainder email sent");
         } catch (Exception e) {
             log.error("Error sending email", e);
         }

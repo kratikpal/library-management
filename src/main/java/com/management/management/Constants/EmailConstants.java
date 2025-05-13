@@ -1,6 +1,7 @@
 package com.management.management.Constants;
 
 public class EmailConstants {
+    public static final String REMAINDER_TIME = "0 0 9 * * ?";
     public static final String REMAINDER_MAIL_SUBJECT = "Book Return Reminder";
     public static final String REMAINDER_MAIL_BODY = """
             Dear User,
