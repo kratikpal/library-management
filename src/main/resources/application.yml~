@@ -12,7 +12,7 @@ spring:
   mail:
     host: smtp.gmail.com
     port: 587
-    username: api
+    username: kratikpal.dodiya@prismberry.com
     password: saue ntbf wwsy cfzu
     properties:
       mail:
@@ -24,3 +24,5 @@ spring:
 jwt:
   secret: 4f1de3c09a8e6e7d7b9f6d1b2d5a8c7e0f3c6a9d2b5e8a7c0f3e6d9c2b5a8e1f4
 
+server:
+  port: 8081

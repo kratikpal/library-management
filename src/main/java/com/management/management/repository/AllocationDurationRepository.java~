@@ -8,6 +8,5 @@ import java.util.List;
 
 public interface AllocationDurationRepository extends MongoRepository<AllocationDuration, ObjectId> {
     List<AllocationDuration> findAllByReturnedFalse();
-
     AllocationDuration findByUserIdAndBookId(ObjectId userId, ObjectId bookId);
 }

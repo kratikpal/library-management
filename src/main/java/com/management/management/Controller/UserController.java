@@ -31,7 +31,7 @@ public class UserController {
     @GetMapping("/email")
     public ResponseEntity<?> sendEmail() {
         try {
-            emailService.sendEmail("amaan.mca23.du@gmail.com", "Test", "This is a test email");
+            emailService.sendRemainderEmail();
             return new ResponseEntity<>("Email sent successfully", HttpStatus.OK);
         } catch (Exception e) {
             throw new HttpException();
