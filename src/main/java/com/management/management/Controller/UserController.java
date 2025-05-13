@@ -6,6 +6,7 @@ import com.management.management.dtos.RegisterUserDto;
 import com.management.management.dtos.SetRoleDto;
 import com.management.management.exception.HttpException;
 import com.management.management.response.GenericResponse;
+import com.management.management.service.EmailService;
 import com.management.management.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -20,9 +21,21 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     private final UserService userService;
+    private final EmailService emailService;
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService, EmailService emailService) {
         this.userService = userService;
+        this.emailService = emailService;
+    }
+
+    @GetMapping("/email")
+    public ResponseEntity<?> sendEmail() {
+        try {
+            emailService.sendEmail("amaan.mca23.du@gmail.com", "Test", "This is a test email");
+            return new ResponseEntity<>("Email sent successfully", HttpStatus.OK);
+        } catch (Exception e) {
+            throw new HttpException();
+        }
     }
 
     @GetMapping()

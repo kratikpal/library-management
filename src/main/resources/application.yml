@@ -1,0 +1,26 @@
+spring:
+  application:
+    name: management
+
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      database: management
+      auto-index-creation: true
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: kratikpal.dodiya@prismberry.com
+    password: saue ntbf wwsy cfzu
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+jwt:
+  secret: 4f1de3c09a8e6e7d7b9f6d1b2d5a8c7e0f3c6a9d2b5e8a7c0f3e6d9c2b5a8e1f4
+
